@@ -1,4 +1,4 @@
-![logo](https://github.com/user-attachments/assets/1dbe3bbb-e6be-4cc3-81da-9490a525a20d)
+![online-logo](https://github.com/user-attachments/assets/db362bea-c6c5-4975-8e88-91aee2319363)
 
 Old-school cool narrative resource-management roleplaying game for the playdate!
 Be a witch and disrupt the ruinous WITCHBANE incantation that is going to go off in six weeks.
