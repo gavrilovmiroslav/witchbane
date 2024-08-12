@@ -1,4 +1,4 @@
-# Witchbane
+![logo](https://github.com/user-attachments/assets/1dbe3bbb-e6be-4cc3-81da-9490a525a20d)
 
 Old-school cool narrative resource-management roleplaying game for the playdate!
 Be a witch and disrupt the ruinous WITCHBANE incantation that is going to go off in six weeks.
