@@ -39,23 +39,46 @@ function scene:init()
 	end
 end
 
+function scene:whish(_time)
+	playdate.timer.performAfterDelay(_time, function()
+		Sounds:play("move2")
+	end)
+end
+
+function scene:whoosh(_time)
+	playdate.timer.performAfterDelay(_time, function()
+		Sounds:play("move")
+	end)
+end
+
+function scene:whosh(_time)
+	playdate.timer.performAfterDelay(_time, function()
+		Sounds:play("move3")
+	end)
+end
+
 function scene:destroyCard(_offset)
 	if _offset == nil then
-		_offset = { x = math.random(-150, 150), y = math.random(-10, 10) }
+		_offset = { x = math.random(-120, 120), y = math.random(-10, 10) }
 	end
 
 	playdate.timer.performAfterDelay(math.random(0, 100), function() 
 		table.insert(self.cardAnims, CardDestroy.new(3, _offset))
+		playdate.timer.performAfterDelay(200, function()
+			Sounds:play("oneoff")
+		end)
 	end)
 end
 
 function scene:popCard(_name, _offset)
 	if _offset == nil then
-		_offset = { x = math.random(-150, 150), y = math.random(-10, 10) }
+		_offset = { x = math.random(-120, 120), y = math.random(-10, 10) }
 	end
 
 	playdate.timer.performAfterDelay(math.random(0, 100), function() 
+		Sounds:play("create")
 		table.insert(self.cardAnims, CardAppear.new({ name = Titles[_name], image = CardBacks[_name] }, 2, _offset))
+		self:whoosh(1700)
 	end)
 end
 
@@ -88,7 +111,7 @@ end
 function scene:enter()
 	scene.super.enter(self)
 	self.sequence = Sequence.new():from(self.menuYFrom):to(self.menuY, 1, Ease.outBounce):start()
-
+	
 	local count = #Char.Data.Cards
 	if count == 0 then
 		-- new week!
@@ -149,6 +172,7 @@ function scene:enter()
 				Noble.transition(Adventuring, nil, Noble.Transition.DipToWhite)
 			end)
 		end)
+		Music:play("Weekend")
 		Sounds:play("new-day")
 		self.menu:activate()
 	else
@@ -163,12 +187,15 @@ function scene:enter()
 	
 		playdate.timer.performAfterDelay(1000, function()
 			self.deckSequence = Sequence.new():from(128):to(-40, 2, Ease.outBack):callback(function() self.menu:activate() end):start()
+			self:whish(700)
 			if self.topic.portrait ~= nil then 
 				self.portraitSequence = Sequence.new():from(100):to(-130, 2, Ease.outBack):start()
 			end	
 		end)
 
 		self.deck = self.topic.deck
+		print("Playing " .. self.deck)
+		Music:play(self.deck)
 
 		if self.topic.oneoff == nil then
 			table.insert(Char.Data.Discard, topic)
@@ -248,7 +275,7 @@ function scene:provideRewards()
 
 				for i = 1, n do
 					table.insert(Char.Data.Discard, Packs[k][i])
-					self:popCard(k, { x = 0, y = 0 })
+					self:popCard(k, { x = 50, y = 10 })
 				end
 			end
 		end
@@ -288,6 +315,7 @@ function scene:provideRewards()
 				self:destroyCard({ x = 165, y = 0 })
 			else
 				self.deckSequence = Sequence.new():from(-40):to(128, 1, Ease.inBack):start()
+				self:whosh(400)
 				if self.topic.portrait ~= nil then
 					self.portraitSequence = Sequence.new():from(-130):to(100, 1, Ease.inBack):start()
 				end

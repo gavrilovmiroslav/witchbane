@@ -10,6 +10,7 @@ function MusicPlayer.new()
     self.fadetime = 3
     self.fader = nil
     self.index = 0
+    self.lastPlayed = nil
     return self
 end
 
@@ -18,11 +19,14 @@ function MusicPlayer:setMaxVolume(m)
 end
 
 function MusicPlayer:play(name)
+    if self.lastPlayed == name then return end
+    self.lastPlayed = name
+
     if self.index == 0 then
         self.index = 1
         self.tracks[1] = playdate.sound.fileplayer.new("assets/music/" .. name)
         self.tracks[1]:setVolume(self.max)
-        self.tracks[1]:play()
+        self.tracks[1]:play(0)
     elseif self.index == 1 then 
         self.fader = Sequence.new():from(self.min):to(self.max, self.fadetime, Ease.inQuad):start()
         self.index = 2
@@ -33,7 +37,7 @@ function MusicPlayer:play(name)
 
         self.tracks[2] = playdate.sound.fileplayer.new("assets/music/" .. name)
         self.tracks[2]:setVolume(self.min)
-        self.tracks[2]:play()
+        self.tracks[2]:play(0)
     elseif self.index == 2 then
         self.fader = Sequence.new():from(self.min):to(self.max, self.fadetime, Ease.inQuad):start()
         self.index = 1
@@ -44,7 +48,7 @@ function MusicPlayer:play(name)
 
         self.tracks[1] = playdate.sound.fileplayer.new("assets/music/" .. name)
         self.tracks[1]:setVolume(self.min)
-        self.tracks[1]:play()
+        self.tracks[1]:play(0)
     end
 end
 

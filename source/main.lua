@@ -37,6 +37,13 @@ Sounds = Soundbank.new({
 	"menu-select",
 	"menu-cancel",
 	"new-day",
+	"victory",
+	"defeat",
+	"oneoff",
+	"create",
+	"move",
+	"move2",
+	"move3"
 })
 
 Music = MusicPlayer.new()
@@ -48,6 +55,7 @@ Buildings = Graphics.imagetable.new("assets/images/buildings")
 CardFrames = Graphics.imagetable.new("assets/images/cardframes")
 CardImages = Graphics.imagetable.new("assets/images/cards")
 CardEffects = Graphics.imagetable.new("assets/images/cardeffects")
+Itchio = Graphics.image.new("assets/images/itchio")
 
 Font = playdate.graphics.font.new("assets/fonts/topaz8")
 playdate.graphics.setFont(Font)

@@ -12,6 +12,7 @@ function scene:start()
 	scene.super.start(self)
 
 	self.menu:activate()
+	Sounds:play("victory")
 end
 
 function scene:enter()

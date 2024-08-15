@@ -6,17 +6,25 @@ function scene:init()
 	scene.super.init(self)
 
 	local takes = {
-		"[ DESIGN, CODE, DITHER ]",
-		"Miroslav Gavrilov",
-		"",
 		"[ CHARACTER PORTRAITS ]",
-		"Sleepless Seven",
+		"Sleepless Seven / itch.io",
 		"",
 		"[ RESOURCE ICONS ]",
-		"RPG Pixel",
+		"RPG Pixel / itch.io",
+		"",
+		"[ CARD ART ]",
+		"CaptainSkeleto",
 		"",
 		"[ MUSIC ]",
-		"David Feslyian"
+		"David Feslyian",
+		"alkakrab / itch.io",
+		"",
+		"[ SFX ]",
+		"Leohpaz / itch.io",
+		"Miroslav Gavrilov",
+		"",
+		"[ DESIGN, CODE, DITHER ]",
+		"Miroslav Gavrilov"
 	}
 
 	self.printout = table.concat(takes, "\n")
@@ -46,8 +54,6 @@ function scene:update()
 	scene.super.update(self)
 
 	local w, h = playdate.display.getSize()
-	Graphics.drawInvertedTextAligned("CREDITS", w / 2, 20, kTextAlignment.center)
-	Graphics.drawInvertedTextAligned(self.printout, w / 2, 50, kTextAlignment.center)
-
+	Graphics.drawInvertedTextAligned(self.printout, w / 2, 20, kTextAlignment.center)
 	self.menu:draw(w / 2, h - 30)
 end

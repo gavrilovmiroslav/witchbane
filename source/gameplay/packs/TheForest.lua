@@ -10,6 +10,4 @@ Packs.TheForest = {
     "RumorsOfDarkness",
     "LostOurBearings1",
     "LostOurBearings2",
-    "LostOurBearings3",
-    "LostOurBearings4",
 }

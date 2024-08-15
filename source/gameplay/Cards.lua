@@ -24,8 +24,7 @@ Cards = {
             {
                 name = "A friendly smile can't hurt.",
                 effect = {},
-                skip = 1,
-                tags = { Victory = 1 }
+                skip = 1
             }
         }
     },
@@ -553,25 +552,25 @@ Cards = {
             {
                 name = "We Shall Hug the Road Again",
                 effect = {},
-                insert = { TheRoad = 3 },
+                insert = { TheRoad = 2 },
                 skip = 2
             },
             {
                 name = "We'll Go Into the Wild",
                 effect = {},
-                insert = { TheForest = 3 },
+                insert = { TheForest = 1 },
                 skip = 2
             },
             {
                 name = "A Storm Is Coming Our Way",
                 effect = {},
-                insert = { TheStorm = 3 },
+                insert = { TheStorm = 1 },
                 skip = 2
             }
         }
     },
     CrimsonIndulgence = {
-        name = "The Dream: Crimson Indulgence",
+        name = "Crimson Indulgence",
         deck = "TheDream",
         oneoff = true,
         options = {
@@ -745,38 +744,6 @@ Cards = {
                 name = "Go Right",
                 effect = {},
                 insert = { TheStorm = 1 }
-            },
-        }
-    },
-    LostOurBearings3 = {
-        name = "We Lost Our Bearings",
-        deck = "TheForest",
-        options = {
-            {
-                name = "Go Left",
-                effect = {},
-                insert = { TheRoad = 1 }
-            },
-            {
-                name = "Go Right",
-                effect = {},
-                insert = { TheNight = 1 }
-            },
-        }
-    },
-    LostOurBearings4 = {
-        name = "We Lost Our Bearings",
-        deck = "TheForest",
-        options = {
-            {
-                name = "Go Left",
-                effect = {},
-                insert = { TheStorm = 1 }
-            },
-            {
-                name = "Go Right",
-                effect = {},
-                insert = { TheRoad = 1 }
             },
         }
     },
