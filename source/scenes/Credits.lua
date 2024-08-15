@@ -21,6 +21,7 @@ function scene:init()
 		"",
 		"[ SFX ]",
 		"Leohpaz / itch.io",
+		"LMGLolo / itch.io",
 		"Miroslav Gavrilov",
 		"",
 		"[ DESIGN, CODE, DITHER ]",
