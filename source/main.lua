@@ -28,6 +28,7 @@ import 'gameplay/packs/TheForest'
 import 'gameplay/packs/TheOmens'
 import 'gameplay/packs/TheTemple'
 import 'gameplay/packs/TheTower'
+import 'gameplay/packs/TheWound'
 import 'gameplay/packs/TheHedgeWitch'
 
 import 'gameplay/campaigns/HedgeWitchCampaign'

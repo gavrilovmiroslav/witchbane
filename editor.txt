@@ -1,0 +1,56 @@
+
+= Kad uzmem da pravim neku kartu, cesto zelim da vidim kako druge karte rade, tako da bi bilo lepo imati multitab ili multiwindow view 
+    (trenutno su sve karte u Cards.lua fajlu, pa ne mogu bas da uredno to radim).
+
+= Ili to ili window za pravljenje karata, gde mogu da napisem tekst (da mi mozda ukaze na character limit), i da dodam opcije, izaberem deck i portret,
+    a pored toga da je neki search prozor gde mogu da ukucam neki keyword sa drugih karata i da to pretrazi.
+
+= Jednom kad napravim kartu, bilo bi super da mogu da uradim neki desni klik i "clone into other pack". Ovo bi mi dalo da biram drugi neki pack
+    i dodam istu tu kartu i tamo, samo sto bi deck bio taj novi pack. Tako mogu da zavrsim sa istom kartom u vise packova, sto je trenutno copy/paste.
+    Klonirane karte bi drzale vezu sa originalnom kartom i ne bi mogle da budu drugacije (drugi efekti, itd)
+
+= Za quest dizajn bi bilo dobro moci praviti quest bez rucnog pravljenja svih malih promena usput. Pogledaj u Cards.lua kako izgleda RedDreams ili Cave deo, i 
+    koliko ima malih koraka tipa "Cave1", "Cave2", itd. sto se eksterno sve prikazuje kao "Cave". Ovo bi u editoru bilo kul uradjeno kao Quest koji se zove
+    "The Cave", a da onda on generise sve ovo sa brojevima samostalno. Bilo bi lepo takodje videti ceo quest, korak za korakom odjednom, kao i koliko resursa
+    je ukupno potrebno da se dodje do kraja (kad se saberu sve opcije koje vode dalje u jednoj liniji).
+
+= Hteo bih da neke efekte mogu jednostavnije da kazem, napravio bih mozda malu biblioteku funkcija. Tipa umesto da svaki put kad hocu da se izgubi pola nekog resursa
+    u kodu imam `function(s) return -s/2 end`, imao bih funkciju `TakeHalf(s)` koja radi to ali je imenovana. Editor bi znao sve ove funkcije i moglo bi jednostavno
+    da se odabere koja opcija koliko kosta.
+
+= Editor moze da updateuje Cards i Campaign fajlove, i da pokrene igru ako je potrebno. Savrseno bi bilo kad bih mogao da saljem iz igre eventove editoru tako da 
+    stanje moze da se prati, ali razumem ako je ovo previse. Mogao bih barem da pisem kako se sta dogadja u fajl, pa da editor taj fajl kasnije cita? Ovo bi bilo 
+    super jer bismo mogli da belezimo citave partije, pa da ih analiziramo.
+
+= Analiza mogucnosti postizanja nekog cilja mi je bitna. Recimo, ako je kampanja...
+
+        { name = "Long Roads Ahead...", content = { TheRoad = 4 } },
+        { name = "And Longer Nights...", content = { TheHedgeWitch = 3, TheNight = 3 } },
+        { name = "Under Thunder Clouds...", content = { TheStorm = 2, TheNight = 1 } },
+        { name = "O'er Rolling Hills...", content = { TheHedgeWitch = 2, TheRoad = 1 } },
+        { name = "Through Forest Thick...", content = { TheForest = 2 } },
+        { name = "To Temple Solemn...", content = { TheForest = 2, TheRoad = 1 } },
+        { name = "Where We Will Thrive.", content = { TheTemple = 1 } }
+    
+    Mozemo da provalimo da ce u igri biti samo ubacivanjem karata 6 Road karata, 5 Hedgewitch, 4 Night, 2 Storm, 4 Forest i 1 Temple. Vec ovo bi bilo
+    jako korisno i vec to bi mi dalo ideju sta treba malo skresati (recimo, u ovom slucaju, forest je malo preteran). No sa druge strane, znamo da efekti
+    ovih karata mogu da dovedu do ubacivanja nekih drugih karata, recimo u Road se nalazi jedna karta koja ubacuje 1 Score, u Night se nalazi jedna koja
+    ubacuje Cave, a u Forestu mozemo da dobijemo Road, Forest ili Storm! Voleo bih da imam neku analizu dostiznosti, recimo da moze da mi kaze koji su najmanji
+    sigurni brojevi koje mogu da imam (ako je moguce da ne izvucem nista dodatno, to su onda oni pocetni), i koji su maksimalni (ako mi odmah dodju ti sto
+    ubace jos toga). Ovo bi onda recimo ukazalo na problem koji imam sa forestom, gde se odjednom oseca kao da sve vreme ubacujes nesto i generalno gubi vreme.
+
+    Na slican nacin, voleo bih da mogu da odaberem neku kartu, recimo iz Temple decka, i da vidim koja je sansa da ostvarim to, uzevsi u obzir sve sto moze da
+    se dobije. Ovog vikenda cu promeniti nacin na koji se dolazi do karata, to bi moglo olaksati ovaj deo. Bice ovako:
+
+    Svaki dek je zasebna gomila koja se na samom pocetku promesa (random shuffle). Posle toga, karte se vuku jedna po jedna dok se ceo dek ne potrosi. Onda se
+    promesa opet. Nece zapravo biti vise jednom decka koji slazemo na pocetku, kampanja ce samo predstavljati iz kojih deckova treba da se vuce, a iz njih ce 
+    se onda vuci. Ovo osigurava da ako imas dek od 5 karata, a ti vuces 4, ako znas igru znas tacno sta ces sledece moci da izvuces i da li ti to treba ili ne. 
+    Sa druge strane, ako imas dek od 3 karte, i vuces 5, znas zasigurno da ces dobiti 3 razlicite i onda 2 ponovljene - trenutno bukvalno mozes da dobijes 5 
+    istih ako nemas srece.
+
+    Ovaj nacin pravljenja decka je super za analizu jer mozes da pretpostavis da je najbolji slucaj onaj u kom su ti karte nastrojene bas kako ti trebaju, znaci
+    uzmes to sto se trazi, sortiras po tome i izvuces najbolje karte, i to radis sve vreme, sa svim opcijama takodje (mozda cak i neki A* u tom prostoru). Isto i 
+    za najgori slucaj.
+
+= Ako u prethodnom koraku jeste moguce uraditi neku pretragu tipa A* u prostoru karata, onda je lako dobiti i najkracu putanju - ako zadam neke karte kao gol,
+    koje sve karte treba da prihvatim usput da bi moglo najbrze da se ostvari.

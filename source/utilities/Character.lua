@@ -12,7 +12,8 @@ function CharacterSheet.new()
 	self.Skip = {}
 
 	self.Campaign = nil
-	self.Age = 5
+	self.Actions = 5
+	self.PlayedActions = 0
 
 	self.Day = 0
 	self.Week = 0

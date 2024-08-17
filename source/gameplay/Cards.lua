@@ -4,12 +4,13 @@ CardBacks = {}
 
 Packs = {}
 
+Uncards = {}
+
 Cards = {
     AFriendlyFaceOnTheRoad = {
         name = "A Friendly Face on the Road",
         portrait = 2,
         deck = "TheRoad",
-        oneoff = true,
         options = {
             {
                 name = "They can share of our food.",
@@ -33,22 +34,63 @@ Cards = {
         name = "Bandits In the Night!",
         deck = "TheNight",
         portrait = 1,
+        options = {
+            {
+                name = "Give Them Your Materials!",
+                effect = { herbs = function(h) return -h end },
+                skip = 2
+            },
+            {
+                name = "Give Them Your Riches!",
+                effect = { affluence = function(a) return -a end },
+                skip = 2
+            },
+            {
+                name = "Endure.",
+                effect = {},
+                insert = { TheWound = function(w) return math.random(1, 3) end },
+                skip = 3
+            },
+            {
+                name = "Haunt Their Dreams...",
+                effect = { familiars = -5 },
+                skip = 10,
+            }
+        }
+    },
+
+    Wound1 = {
+        name = "A Painful Wound",
+        deck = "TheWound",
         oneoff = true,
         options = {
             {
-                name = "Hope For the Best, As Above So Below.",
-                effect = { affluence = function(a) return -a / 2 end, coven = function (c) return -c / 3 end },
-                skip = 2
-            },
+                name = "Ignore It Until It Goes Away",
+                effect = {}
+            }
+        }
+    },
+
+    Wound2 = {
+        name = "A Throbbing Pain",
+        deck = "TheWound",
+        oneoff = true,
+        options = {
             {
-                name = "Leave Your Belongings and Flee!",
-                effect = { herbs = function (h) return -h / 2 end, affluence = function (h) return -h / 4 end, artifacts = -1 },
-                skip = 2
-            },
+                name = "Massage It Until Sleep Takes You",
+                effect = {}
+            }
+        }
+    },
+
+    Wound3 = {
+        name = "A Cut That Never Healed Right",
+        deck = "TheWound",
+        oneoff = true,
+        options = {
             {
-                name = "Nay, Our Coven Stands Our Ground.",
-                effect = { familiars = function(f) return -f / 2 end, coven = -1 },
-                skip = 2
+                name = "Bandage It Yet Again",
+                effect = {}
             }
         }
     },
@@ -56,7 +98,6 @@ Cards = {
     ATreasureToBehold = {
         name = "A Treasure to Behold",
         deck = "TheRoad",
-        oneoff = true,
         options = {
             { 
                 name = "It goes to the highest bid.",
@@ -178,7 +219,6 @@ Cards = {
     VillageHealerNotAWitch = {
         name = "Our Calling is Helping the Locals",
         deck = "TheRoad",
-        oneoff = true,
         options = {
             {
                 name = "From Problem to Pocket",
@@ -198,7 +238,6 @@ Cards = {
     FairyRingsToGrantUsThings = {
         name = "Fairy Rings To Grant Us Things",
         deck = "TheRoad",
-        oneoff = true,
         options = {
             {
                 name = "Abundant Herbs To Last the Winter",
@@ -221,7 +260,6 @@ Cards = {
     ABrokenCartOnTheOpenRoad = {
         name = "A Ruined Cart on the Open Road",
         deck = "TheNight",
-        oneoff = true,
         options = {
             {
                 name = "Renew your Coffers",
@@ -266,7 +304,6 @@ Cards = {
     ASharpFeverInTheNight = {
         name = "A Sharp Fever in the Night",
         deck = "TheNight",
-        oneoff = true,
         options = {
             {
                 name = "Take Better Care of Ourselves",

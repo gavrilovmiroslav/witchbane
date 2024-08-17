@@ -116,6 +116,7 @@ function scene:enter()
 	if count == 0 then
 		-- new week!
 		self.newWeek = true
+		Char.Data.PlayedActions = 0
 		Char.Data.Week = Char.Data.Week + 1
 		table.shuffle(Char.Data.Discard)
 
@@ -194,8 +195,7 @@ function scene:enter()
 		end)
 
 		self.deck = self.topic.deck
-		print("Playing " .. self.deck)
-		Music:play(self.deck)
+		Music:play(self.deck:gsub("%d+", ""))
 
 		if self.topic.oneoff == nil then
 			table.insert(Char.Data.Discard, topic)
@@ -290,6 +290,16 @@ function scene:provideRewards()
 				Noble.transition(VictoryScreen, nil, Noble.Transition.DipToWhite)
 				return
 			end
+		end
+
+		Char.Data.PlayedActions = Char.Data.PlayedActions + 1
+		print(tostring(Char.Data.PlayedActions) .. " out of " .. tostring(Char.Data.Actions))
+		if Char.Data.PlayedActions > Char.Data.Actions then
+			for _, card in pairs(Char.Data.Cards) do
+				table.insert(Char.Data.Discard, card)
+			end
+
+			Char.Data.Cards = {}
 		end
 
 		local w, h = playdate.display.getSize()
