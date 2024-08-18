@@ -1,6 +1,6 @@
 
 Titles.TheForest = "THE FOREST"
-CardBacks.TheForest = 14
+CardBacks.TheForest = 12
 
 Packs.TheForest = {
     "AnAbundantGrove",

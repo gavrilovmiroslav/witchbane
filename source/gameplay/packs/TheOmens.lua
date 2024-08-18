@@ -1,6 +1,6 @@
 -- todo
 Titles.TheOmens = "THE OMENS"
-CardBacks.TheOmens = 17
+CardBacks.TheOmens = 7
 
 Packs.TheOmens = {
     "ProfoundDreams",

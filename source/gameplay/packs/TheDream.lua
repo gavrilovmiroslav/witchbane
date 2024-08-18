@@ -15,7 +15,7 @@ Titles.RedDream1 = "RED DREAM"
 CardBacks.RedDream1 = 19
 
 Packs.RedDream1 = {
-    "TheLakeOfBecoming"
+    "AtTheLakeOfBecoming"
 }
 
 Titles.RedDream2 = "RED DREAM"

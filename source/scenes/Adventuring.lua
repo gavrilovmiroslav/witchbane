@@ -110,6 +110,7 @@ end
 
 function scene:enter()
 	scene.super.enter(self)
+	
 	self.sequence = Sequence.new():from(self.menuYFrom):to(self.menuY, 1, Ease.outBounce):start()
 	
 	local count = #Char.Data.Cards
@@ -118,7 +119,6 @@ function scene:enter()
 		self.newWeek = true
 		Char.Data.PlayedActions = 0
 		Char.Data.Week = Char.Data.Week + 1
-		table.shuffle(Char.Data.Discard)
 
 		local remember = {}
 		for _, card in pairs(Char.Data.Discard) do
@@ -135,6 +135,7 @@ function scene:enter()
 			end
 		end
 
+		table.shuffle(Char.Data.Cards)
 		Char.Data.Discard = {}
 		table.move(remember, 1, #remember, 1, Char.Data.Discard)
 
@@ -159,14 +160,15 @@ function scene:enter()
 		self.menu = Noble.Menu.new(false, Noble.Text.ALIGN_LEFT, false, Graphics.kColorBlack, 4, 4, 4, Font)
 		
 		self.menu:addItem(weekly.name, function()
+			if self.choiceMade then
+				return
+			end
+			
+			self.choiceMade = true
+
 			for _, card in pairs(Char.Data.Cards) do
-				print("-----------")
-				print(weekly.name)
-				print(Cards)
-				print(card)
 				local deck = Cards[card].deck
 				self:popCard(deck)
-				print("-----------")
 			end
 
 			playdate.timer.performAfterDelay(2500, function()
@@ -218,6 +220,10 @@ function scene:enter()
 			end)
 		end
 	end
+
+	Char.Data.PlayedActions = Char.Data.PlayedActions + 1
+	self.currentDay = Char.Data.PlayedActions
+	self.currentWeek = Char.Data.Week
 end
 
 function scene:canDo(_option)
@@ -275,7 +281,7 @@ function scene:provideRewards()
 
 				for i = 1, n do
 					table.insert(Char.Data.Discard, Packs[k][i])
-					self:popCard(k, { x = 50, y = 10 })
+					self:popCard(k)
 				end
 			end
 		end
@@ -292,9 +298,7 @@ function scene:provideRewards()
 			end
 		end
 
-		Char.Data.PlayedActions = Char.Data.PlayedActions + 1
-		print(tostring(Char.Data.PlayedActions) .. " out of " .. tostring(Char.Data.Actions))
-		if Char.Data.PlayedActions > Char.Data.Actions then
+		if Char.Data.PlayedActions >= Char.Data.Actions then
 			for _, card in pairs(Char.Data.Cards) do
 				table.insert(Char.Data.Discard, card)
 			end
@@ -354,6 +358,12 @@ function scene:updateAnims()
 	end
 end
 
+function scene:dayname(_index)
+	local names <const> = { "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" }
+	if _index == 0 then return "CAMP"
+	else return names[_index] end
+end
+
 function scene:update()
 	scene.super.update(self)
 
@@ -361,12 +371,14 @@ function scene:update()
 
 	local w, h = playdate.display.getSize()
 
-	if self.newWeek then 
+	if self.newWeek then
 		Graphics.setColor(Graphics.kColorWhite)
 		Graphics.setDitherPattern(0.2, Graphics.image.kDitherTypeScreen)
 		Graphics.fillRoundRect(self.menuX, self.sequence:get() or self.menuY, 285, 300, 15)	
 		Graphics.setDitherPattern(1.0, Graphics.image.kDitherTypeScreen)
 		Font:drawText("Start of week " .. tostring(Char.Data.Week) .. "!", 35, 30)
+	
+		Font:drawText(self:dayname(self.currentDay) .. ", WEEK " .. tostring(self.currentWeek), 2, h - 90)
 		self.menu:draw(self.menuX + 35, self.sequence:get() + 38 or self.menuY + 8)
 	else
 		Graphics.setColor(Graphics.kColorBlack)
@@ -374,7 +386,6 @@ function scene:update()
 		Graphics.fillRoundRect(self.menuX, self.sequence:get() or self.menuY, 285, 300, 15)	
 		Graphics.setDitherPattern(1.0, Graphics.image.kDitherTypeScreen)
 		Graphics.drawInvertedText(self.topic.name, 35, 30)
-		
 		local i = 0
 
 		local effect = self.topic.options[self.menu.currentItemNumber].effect
@@ -388,6 +399,7 @@ function scene:update()
 				end
 			else
 				for k, n in pairs(effect) do
+					local x = 95
 					if type(n) == "function" then
 						n = math.floor(n(Char.Data.Resources[k]))
 					end
@@ -396,14 +408,14 @@ function scene:update()
 					local sign = n > 0 and "+" or ""
 					local num = sign .. tostring(n)
 					local numWidth = Font:getTextWidth(num)
-					Graphics.drawInvertedText(num, 85, h - 120 + i)
-					Char.smallicons:drawImage(Utilities.getIndexForStat(k), 85 + numWidth + 5, h - 120 + i)
-					Graphics.drawInvertedText(" " .. k, 85 + numWidth + 13, h - 120 + i)
+					Graphics.drawInvertedText(num, x, h - 120 + i)
+					Char.smallicons:drawImage(Utilities.getIndexForStat(k), x + numWidth + 5, h - 120 + i)
+					Graphics.drawInvertedText(" " .. k, x + numWidth + 13, h - 120 + i)
 
 					if n < 0 and Char.Data.Resources[k] + n < 0 then
 						Graphics.setColor(Graphics.kColorBlack)
 						Graphics.setDitherPattern(0.5, Graphics.image.kDitherTypeBayer2x2)
-						Graphics.fillRoundRect(85, h - 120 + i, Font:getTextWidth(k) + numWidth + 36, 16, 1)
+						Graphics.fillRoundRect(x, h - 120 + i, Font:getTextWidth(k) + numWidth + 36, 16, 1)
 					end
 
 					i = i + 10
@@ -466,6 +478,8 @@ function scene:update()
 	end
 
 	Char:draw(false, nil)
+	Graphics.fillRoundRect(0, h - 92, 80, 14, 2)
+	Graphics.drawInvertedText(self:dayname(self.currentDay) .. ", WEEK " .. tostring(self.currentWeek), 2, h - 88)
 
 	for _, card in pairs(self.cardAnims) do
 		card:draw()

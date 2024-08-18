@@ -12,7 +12,7 @@ function CharacterSheet.new()
 	self.Skip = {}
 
 	self.Campaign = nil
-	self.Actions = 5
+	self.Actions = 7
 	self.PlayedActions = 0
 
 	self.Day = 0
@@ -75,13 +75,13 @@ function Character:drawPortrait(description)
 	Portraits:drawImage(self.portraitIds[self.Data.Portrait], 0, h - 80, playdate.graphics.kImageFlippedX)
     if description then
 	    Graphics.drawInvertedText(self.descriptions[self.Data.Portrait], 85, h - 70)
-    end
+	end
 end
 
 function Character:drawInventory(bonuses)
 	local w, h = playdate.display.getSize()
 	local stats = table.copy(self.Data.Resources)
-    
+
     if bonuses ~= nil then
     	bonuses[self.Data.Portrait](stats)
     end

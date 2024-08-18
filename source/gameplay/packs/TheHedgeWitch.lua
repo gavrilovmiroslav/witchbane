@@ -1,6 +1,6 @@
 
 Titles.TheHedgeWitch = "THE WITCH"
-CardBacks.TheHedgeWitch = 15
+CardBacks.TheHedgeWitch = 2
 
 Packs.TheHedgeWitch = {
     "APickingOfBerries",

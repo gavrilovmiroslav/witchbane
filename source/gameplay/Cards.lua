@@ -613,7 +613,7 @@ Cards = {
         options = {
             {
                 name = "Drink of the River of Life",
-                effect = { coven = -1, familiar = -1 },
+                effect = { coven = -1, familiars = -1 },
                 insert = { RedDream1 = 1 }
             },
             {
@@ -629,7 +629,7 @@ Cards = {
         options = {
             {
                 name = "Drink Deeper the Crimson, Never Stop",
-                effect = { coven = -1, familiar = -1 },
+                effect = { coven = -1, familiars = -1 },
                 insert = { RedDream2 = 1 }
             },
             {
@@ -645,7 +645,7 @@ Cards = {
         options = {
             {
                 name = "Invite Their Lanky, Hungry Form",
-                effect = { coven = -2, familiar = -1, herbs = -1 },
+                effect = { coven = -2, familiars = -1, herbs = -1 },
                 insert = { RedDream3 = 1 }
             },
             {
@@ -661,12 +661,12 @@ Cards = {
         options = {
             {
                 name = "Salvation!",
-                effect = { coven = -2, familiar = -1, herbs = -1, affluence = -1 },
+                effect = { coven = -2, familiars = -1, herbs = -1, affluence = -1 },
                 insert = { RedDream4 = 1 }
             },
             {
                 name = "Destruction!",
-                effect = { coven = -1, familiar = -1 },
+                effect = { coven = -1, familiars = -1 },
                 insert = { RedDream3 = 1 }
             },
             {
@@ -682,7 +682,7 @@ Cards = {
         options = {
             {
                 name = "Thirst Eternal, Blood and Souls!",
-                effect = { coven = -2, familiar = -2 },
+                effect = { coven = -2, familiars = -2 },
                 insert = { RedDream5 = 1 }
             },
             {
