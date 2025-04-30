@@ -1,3 +1,6 @@
 [submodule "playdate-luacats"]
 	path = playdate-luacats
 	url = https://github.com/notpeter/playdate-luacats
+[submodule "Source/panels"]
+	path = Source/panels
+	url = https://github.com/cadin/panels.git
