@@ -1,0 +1,17 @@
+{
+    "title": "Hello world",
+    "panels": [
+        {
+            "invertTextColor": true,
+            "layers": [
+                { "text": "Hi", "x": 50, "y": 100 }
+            ]
+        },
+        {
+            "invertTextColor": true,
+            "layers": [
+                { "text": "there!", "x": 250, "y": 150 }
+            ]
+        }
+    ]
+}

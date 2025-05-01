@@ -9,6 +9,8 @@ function cauldron.load()
 	gfx.load_font("big", "font//Mini Sans 2X")
 	gfx.load_image("boss", "images//boss.png")
 
+	cut.load("test", "cutscenes//test")
+
 	local game = fsm.new("game")
 	game:add_state("a")
 	game:add_state("b")
@@ -18,10 +20,13 @@ end
 
 function cauldron.debug(message)
 	fsm.get("game"):follow(message)
+	cut.play("test")
 end
 
 function cauldron.update()
-
+	if playdate.AButtonUp then
+		cut.play("test")
+	end
 end
 
 function cauldron.draw()

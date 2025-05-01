@@ -40,13 +40,20 @@ end
 
 M.cutscene = {}
 M.cutscene.state = nil
+Panels.Settings.snapToPanels = true
+Panels.Settings.defaultFrame = { gap = 10, margin = 2 }
 
-M.cutscene.load = function(name, data)
+M.cutscene.load = function(name, path)
+    local data = json.decodeFile(path .. ".json")
     if M.loaded.cutscenes[name] ~= nil then
         print("Warning: cutscene " .. name .. " already exists, overwriting!")
     end
 
-    M.loaded.cutscenes[name] = data
+    data.axis = Panels.ScrollAxis.HORIZONTAL
+    data.scrollType = Panels.ScrollType.AUTO
+    data.direction = Panels.ScrollDirection.LEFT_TO_RIGHT
+    
+    M.loaded.cutscenes[name] = { data }
 end
 
 M.cutscene.play = function(name, fn)
@@ -56,7 +63,9 @@ M.cutscene.play = function(name, fn)
         M.cutscene.state = name
         Panels.startCutscene(M.loaded.cutscenes[name], function()
             M.cutscene.state = nil
-            fn()
+            if fn ~= nil then
+                fn()
+            end
         end)
     else
         print("Warning: cutscene " .. name .. " doesn't exist!")
@@ -65,7 +74,7 @@ end
 
 M.cutscene.stop = function()
     if M.cutscene.state ~= nil then
-        Panels.haltCutscene(M.cutscene.state)
+        Panels.haltCutscene()
         M.cutscene.state = nil
     end
 end
@@ -154,8 +163,12 @@ M.draw = function() end
 M.update = function() end
 
 function playdate.update()
-    M.update()
-    M.draw()
+    if M.cutscene.state ~= nil then
+        Panels.update()
+    else
+        M.update()
+        M.draw()
+    end
 end
 
 M.init = function()
