@@ -14,6 +14,7 @@ M.loaded.fonts = {}
 M.loaded.ui = {}
 M.loaded.fsms = {}
 M.loaded.cutscenes = {}
+M.loaded.save = {}
 
 -- COLORS 
 
