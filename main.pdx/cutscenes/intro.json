@@ -1,0 +1,25 @@
+{
+    "title": "Hello world",
+    "panels": [
+        {
+            "layers": [
+                { "text": "Young maiden, Mother's praise...", "x": 10, "y": 210 }
+            ]
+        },
+        {
+            "layers": [
+                { "text": "wake to hear what we propose.", "x": 10, "y": 210 }
+            ]
+        },
+        {
+            "layers": [
+                { "image": "..//images//demons//gamori1.png", "x": 0, "y": 0 }
+            ]
+        },
+        {
+            "layers": [
+                { "image": "..//images//demons//gamori2.png", "x": 0, "y": 0 }
+            ]
+        }
+    ]
+}

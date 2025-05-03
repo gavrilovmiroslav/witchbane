@@ -1,5 +1,6 @@
 import "utils/playout"
 import "CoreLibs/object"
+local lume <const> = import "utils/lume"
 
 local panels = import "panels/Panels"
 local fsm = import "utils/fsm"
@@ -15,6 +16,32 @@ M.loaded.ui = {}
 M.loaded.fsms = {}
 M.loaded.cutscenes = {}
 M.loaded.save = {}
+
+-- SAVE
+
+M.save = { name = nil, data = nil }
+
+M.save.init = function(name, clear)
+    M.save.name = name
+    if clear then
+        playdate.datastore.delete(name)
+    end
+end
+
+M.save.commit = function(o)
+    M.save.data = lume.merge(M.save.data or {}, o)
+    playdate.datastore.write(o, M.save.name, false)
+end
+
+M.save.load = function(default)
+    local savedata = playdate.datastore.read(M.save.name)
+    if savedata == nil then
+        savedata = default
+        M.save.commit(savedata)
+        return false, savedata
+    end
+    return true, savedata
+end
 
 -- COLORS 
 
