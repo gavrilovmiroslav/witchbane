@@ -1,7 +1,7 @@
 import "utils/playout"
 import "CoreLibs/object"
 local lume <const> = import "utils/lume"
-
+local tween <const> = import "utils/tween"
 local panels = import "panels/Panels"
 local fsm = import "utils/fsm"
 
@@ -9,6 +9,7 @@ local M = {}
 
 local gfx = playdate.graphics
 
+M.fps = true
 M.loaded = {}
 M.loaded.images = {}
 M.loaded.fonts = {}
@@ -55,6 +56,7 @@ M.colors.xor = gfx.kColorXOR
 -- FSM
 
 M.fsm = {}
+
 M.fsm.new = function(name)
     M.loaded.fsms[name] = fsm:new()
     return M.loaded.fsms[name]
@@ -68,8 +70,7 @@ end
 
 M.cutscene = {}
 M.cutscene.state = nil
-Panels.Settings.snapToPanels = true
-Panels.Settings.defaultFrame = { gap = 10, margin = 2 }
+Panels.Settings.defaultFrame = { gap = 0, margin = 0 }
 
 M.cutscene.load = function(name, path)
     local data = json.decodeFile(path .. ".json")
@@ -77,9 +78,10 @@ M.cutscene.load = function(name, path)
         print("Warning: cutscene " .. name .. " already exists, overwriting!")
     end
 
-    data.axis = Panels.ScrollAxis.HORIZONTAL
+    data.backgroundColor = Panels.Color.BLACK
+    data.axis = Panels.ScrollAxis.VERTICAL
     data.scrollType = Panels.ScrollType.AUTO
-    data.direction = Panels.ScrollDirection.LEFT_TO_RIGHT
+    data.direction = Panels.ScrollDirection.UP_TO_DOWN
     
     M.loaded.cutscenes[name] = { data }
 end
@@ -115,7 +117,12 @@ end
 
 M.graphics = {}
 
-M.graphics.clear = function()
+M.graphics.clearBlack = function()
+    gfx.setColor(gfx.kColorBlack)
+    gfx.fillRect(0, 0, 400, 240)
+end
+
+M.graphics.clearWhite = function()
     gfx.setColor(gfx.kColorWhite)
     gfx.fillRect(0, 0, 400, 240)
 end
@@ -130,7 +137,7 @@ M.graphics.set_font = function(name)
 end
 
 M.graphics.get_font = function(name)
-    return M.graphics._current_font
+    return M.loaded.fonts[name]
 end
 
 M.graphics.font = function(name)
@@ -151,10 +158,21 @@ end
 
 M.graphics.load_image = function(name, path)
     M.loaded.images[name] = gfx.image.new(path)
+    return M.loaded.images[name]
+end
+
+M.graphics.get_image = function(name)
+    return M.loaded.images[name]
 end
 
 M.graphics.unload_image = function(name)
     M.loaded.images[name] = nil
+end
+
+M.graphics.draw_faded = function(x, y, name, fade, dither)
+    if M.loaded.images[name] ~= nil then
+        M.loaded.images[name]:drawFaded(x, y, fade or 0.5, dither or gfx.image.kDitherTypeBayer4x4)
+    end
 end
 
 M.graphics.draw_image = function(x, y, name)
@@ -184,6 +202,48 @@ function playdate.serialMessageReceived(message)
     M.debug(message)
 end
 
+-- TWEEN
+
+M.tween = tween
+
+-- AUDIO
+
+local sound <const> = playdate.sound
+
+M.music = {}
+M.music.current = nil
+M.music.tracks = {}
+
+M.music.prepare = function(songs)
+    for _, s in ipairs(songs) do
+        M.music.tracks[s.name] = sound.fileplayer.new(s.path)
+        if s.rate ~= nil then
+            M.music.tracks[s.name]:setRate(s.rate)
+        end
+    end
+end
+
+M.music.play = function(next, from_volume)
+    M.music.current = M.music.tracks[next]
+    if M.music.current ~= nil then
+        M.music.current:setVolume(from_volume or 0)
+        M.music.current:play(0)
+        M.music.current:setVolume(1, 1, 1.0)
+    end
+end
+
+M.music.fade_to = function(next)
+    if M.music.current ~= nil then
+        M.music.current:setVolume(0, 0, 1.0, function(p, e)
+            M.music.current:stop()
+            M.music.current:setVolume(1)
+            if next ~= nil then
+                M.music.play(next, 0)
+            end
+        end)
+    end
+end
+
 -- GENERAL
 
 M.load = function() end
@@ -196,6 +256,9 @@ function playdate.update()
     else
         M.update()
         M.draw()
+    end
+    if M.fps then
+        playdate.drawFPS(0, 0)
     end
 end
 

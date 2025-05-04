@@ -9,6 +9,8 @@ function fsm:new (o)
     self.transitions = {}
     self.on_enter = {}
     self.on_exit = {}
+    self.on_draw = {}
+    self.on_update = {}
     self.current = nil
     return o
 end
@@ -28,6 +30,14 @@ function fsm:add_on_exit_hook(state, fn)
     self.on_exit[state] = fn
 end
 
+function fsm:add_on_update_hook(state, fn)
+    self.on_update[state] = fn
+end
+
+function fsm:add_on_draw_hook(state, fn)
+    self.on_draw[state] = fn
+end
+
 function fsm:add_link(from, to, name, event)
     if self.transitions[from] == nil then
         self.transitions[from] = {}
@@ -38,6 +48,22 @@ function fsm:add_link(from, to, name, event)
     end
 
     self.transitions[from][name] = { to, event }
+end
+
+function fsm:update()
+    if self.current ~= nil then
+        if self.on_update[self.current] ~= nil then
+            self.on_update[self.current]()
+        end
+    end
+end
+
+function fsm:draw()
+    if self.current ~= nil then
+        if self.on_draw[self.current] ~= nil then
+            self.on_draw[self.current]()
+        end
+    end
 end
 
 function fsm:follow(name, ...)
