@@ -92,6 +92,7 @@ local function load_game_fsm()
 	game:add_link("game start", "menu", "game start->menu")
 	game:add_link("intro", "menu", "intro->menu")
 
+	game:add_link("menu", "run start", "menu->run start")
 	game:init()
 end
 

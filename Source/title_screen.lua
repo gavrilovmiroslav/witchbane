@@ -22,6 +22,7 @@ game:add_on_enter_hook("menu", function()
     vars.title_crank = 0
     vars.title_glow = 0
     vars.title_fade = { value = 0 }
+    vars.title_fadeout = { value = 0 }
     tweens.title_fade = twn.new(30, vars.title_fade, { value = 1 }, 'outCubic')
 end)
 
@@ -52,18 +53,12 @@ game:add_on_update_hook("menu", function()
 end)
 
 game:add_on_draw_hook("menu", function()
-    local black = gfx.get_image("title_black")
-    local logo = gfx.get_image("title_logo")
-    local seal = gfx.get_image("title_seal")
-    local logo_glow = gfx.get_image("title_glow")
-    local font = gfx.get_font("small")
-
     gfx.clear_black()
     gfx.copy_white()
     gfx.draw_faded(0, 0, "title_logo", vars.title_fade.value)
     gfx.draw_image(vars.title_glow - 20, -1, "title_glow", playdate.geometry.rect.new(vars.title_glow - 20, 0, 50, 100))
     gfx.draw_image(vars.title_glow, -1, "title_glow", playdate.geometry.rect.new(vars.title_glow, 0, 20, 240))
-    
+
     gfx.invert_white()
 
     if vars.title_crank > 0 then
@@ -81,11 +76,12 @@ game:add_on_draw_hook("menu", function()
     gfx.copy_black()
     gfx.draw_rect(0, 160, 400, 12, true)
     gfx.invert_white()
-    font:drawTextAligned("CRANK: Begin Ritual", 200, 160, kTextAlignment.center)
+    gfx.draw_text_centered(200, 160, "CIRCLE: Begin Ritual")
     gfx.copy_white()
 
+    print(vars.title_done, vars.title_fadeout.value)
     if vars.title_done then
-        gfx.draw_faded(0, 0, "black", vars.title_fadeout.value, g.image.kDitherTypeBayer2x2)
+        gfx.draw_faded(0, 0, "title_black", vars.title_fadeout.value, g.image.kDitherTypeBayer2x2)
         if vars.title_fadeout.value == 1 then
             game:follow("menu->start")
         end

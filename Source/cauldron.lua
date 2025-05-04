@@ -184,6 +184,16 @@ M.graphics.draw_text = function(x, y, text, colorChange)
     gfx.setColor(oldColor)
 end
 
+M.graphics.draw_text_centered = function(x, y, text, colorChange)
+    local oldColor = gfx.getColor()
+    if colorChange ~= nil then
+        gfx.setColor(colorChange)
+    end
+
+    gfx.drawTextAligned(text, x, y, kTextAlignment.center)
+    gfx.setColor(oldColor)
+end
+
 M.graphics.load_image = function(name, path)
     M.loaded.images[name] = gfx.image.new(path)
     return M.loaded.images[name]
@@ -200,6 +210,8 @@ end
 M.graphics.draw_faded = function(x, y, name, fade, dither)
     if M.loaded.images[name] ~= nil then
         M.loaded.images[name]:drawFaded(x, y, fade or 0.5, dither or gfx.image.kDitherTypeBayer4x4)
+    else
+        print("Missing image", name)
     end
 end
 
