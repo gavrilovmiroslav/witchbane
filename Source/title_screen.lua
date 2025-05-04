@@ -10,7 +10,6 @@ local rad = math.rad
 local game = fsm.get("game")
 
 local vars = {}
-local tweens = {}
 
 gfx.load_image("title_black", 'images/black.png')
 gfx.load_image("title_logo", 'images/logo.png')
@@ -21,14 +20,11 @@ game:add_on_enter_hook("menu", function()
     vars.title_done = false
     vars.title_crank = 0
     vars.title_glow = 0
-    vars.title_fade = { value = 0 }
-    vars.title_fadeout = { value = 0 }
-    tweens.title_fade = twn.new(30, vars.title_fade, { value = 1 }, 'outCubic')
+    twn.new("title_fade", 30, { 0, 1 }, 'outCubic')
 end)
 
 game:add_on_update_hook("menu", function()
-    tweens.title_fade:update(0.1)
-    if tweens.title_fadeout ~= nil then tweens.title_fadeout:update(0.1) end
+    twn.update()
     if not vars.title_done then
         local c, a = playdate.getCrankChange()
         if c < 0 then c = 0 end
@@ -38,8 +34,9 @@ game:add_on_update_hook("menu", function()
             vars.title_done = true
             sfx.play("start")
             mus.fade_to("fight")
-            vars.title_fadeout = { value = 0 }
-            tweens.title_fadeout = twn.new(5, vars.title_fadeout, { value = 1 }, 'outCubic')
+            twn.new("title_fadeout", 5, { 0, 1 }, 'outCubic', function()
+                game:follow("menu->start")
+            end)
         end
         if c == 0 and a == 0 and playdate.getCrankPosition() > 0 then
             vars.title_crank = vars.title_crank - 0.1
@@ -55,7 +52,7 @@ end)
 game:add_on_draw_hook("menu", function()
     gfx.clear_black()
     gfx.copy_white()
-    gfx.draw_faded(0, 0, "title_logo", vars.title_fade.value)
+    gfx.draw_faded(0, 0, "title_logo", twn.get("title_fade"))
     gfx.draw_image(vars.title_glow - 20, -1, "title_glow", playdate.geometry.rect.new(vars.title_glow - 20, 0, 50, 100))
     gfx.draw_image(vars.title_glow, -1, "title_glow", playdate.geometry.rect.new(vars.title_glow, 0, 20, 240))
 
@@ -79,12 +76,8 @@ game:add_on_draw_hook("menu", function()
     gfx.draw_text_centered(200, 160, "CIRCLE: Begin Ritual")
     gfx.copy_white()
 
-    print(vars.title_done, vars.title_fadeout.value)
     if vars.title_done then
-        gfx.draw_faded(0, 0, "title_black", vars.title_fadeout.value, g.image.kDitherTypeBayer2x2)
-        if vars.title_fadeout.value == 1 then
-            game:follow("menu->start")
-        end
+        gfx.draw_faded(0, 0, "title_black", twn.get("title_fadeout") or 1, g.image.kDitherTypeBayer2x2)
     elseif vars.title_crank == 0 then
         playdate.ui.crankIndicator:draw()
     end

@@ -264,7 +264,40 @@ end
 
 -- TWEEN
 
-M.tween = tween
+M.tween = {}
+M.tween.vars = {}
+M.tween.limits = {}
+M.tween.tweens = {}
+M.tween.callbacks = {}
+
+M.tween.new = function(name, length, range, kind, callback)
+    M.tween.vars[name] = { value = range[1] }
+    M.tween.limits[name] = range[2]
+    M.tween.tweens[name] = tween.new(length, M.tween.vars[name], { value = range[2] }, kind or 'outCubic')
+    M.tween.callbacks[name] = callback
+    return M.tween.tweens[name]
+end
+
+M.tween.update = function(dt)
+    for n, t in pairs(M.tween.tweens) do
+        t:update(dt or 0.1)
+        if M.tween.vars[n].value >= M.tween.limits[n] then
+            if M.tween.callbacks[n] ~= nil then
+                M.tween.callbacks[n]()
+                M.tween.vars[n] = nil
+                M.tween.limits[n] = nil
+                M.tween.tweens[n] = nil
+                M.tween.callbacks[n] = nil
+            end
+        end
+    end
+end
+
+M.tween.get = function(name)
+    local t = M.tween.vars[name]
+    if t == nil then return nil end
+    return t.value
+end
 
 -- AUDIO
 
