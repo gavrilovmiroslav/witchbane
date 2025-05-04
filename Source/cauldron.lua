@@ -70,7 +70,7 @@ end
 
 M.cutscene = {}
 M.cutscene.state = nil
-Panels.Settings.defaultFrame = { gap = 0, margin = 0 }
+Panels.Settings.defaultFrame = { gap = 0, margin = 2 }
 
 M.cutscene.load = function(name, path)
     local data = json.decodeFile(path .. ".json")
@@ -117,14 +117,42 @@ end
 
 M.graphics = {}
 
-M.graphics.clearBlack = function()
+M.graphics.clear_black = function()
     gfx.setColor(gfx.kColorBlack)
     gfx.fillRect(0, 0, 400, 240)
 end
 
-M.graphics.clearWhite = function()
+M.graphics.clear_white = function()
     gfx.setColor(gfx.kColorWhite)
     gfx.fillRect(0, 0, 400, 240)
+end
+
+M.graphics.copy_white = function()
+    gfx.setColor(gfx.kColorWhite)
+    gfx.setImageDrawMode(gfx.kDrawModeCopy)
+end
+
+M.graphics.copy_black = function()
+    gfx.setColor(gfx.kColorBlack)
+    gfx.setImageDrawMode(gfx.kDrawModeCopy)
+end
+
+M.graphics.invert_white = function()
+    gfx.setColor(gfx.kColorWhite)
+    gfx.setImageDrawMode(gfx.kDrawModeInverted)
+end
+
+M.graphics.invert_black = function()
+    gfx.setColor(gfx.kColorBlack)
+    gfx.setImageDrawMode(gfx.kDrawModeInverted)
+end
+
+M.graphics.white = function()
+    gfx.setColor(gfx.kColorWhite)
+end
+
+M.graphics.black = function()
+    gfx.setColor(gfx.kColorBlack)
 end
 
 M.graphics.load_font = function(name, path)
@@ -175,9 +203,29 @@ M.graphics.draw_faded = function(x, y, name, fade, dither)
     end
 end
 
-M.graphics.draw_image = function(x, y, name)
+M.graphics.draw_image = function(x, y, name, rect)
     if M.loaded.images[name] ~= nil then
-        M.loaded.images[name]:draw(x, y)
+        M.loaded.images[name]:draw(x, y, gfx.kImageUnflipped, rect)
+    end
+end
+
+M.graphics.draw_arc = function(x, y, a, b, i)
+    gfx.drawArc(x, y, a, b, i)
+end
+
+M.graphics.draw_circle = function(x, y, r, filled)
+    if filled then
+        gfx.fillCircleAtPoint(x, y, r)
+    else
+        gfx.drawCircleAtPoint(x, y, r)
+    end
+end
+
+M.graphics.draw_rect = function(x, y, w, h, filled)
+    if filled then
+        gfx.fillRect(x, y, w, h)
+    else
+        gfx.drawRect(x, y, w, h)
     end
 end
 
@@ -210,6 +258,25 @@ M.tween = tween
 
 local sound <const> = playdate.sound
 
+M.sfx = {}
+M.sfx.tracks = {}
+
+M.sfx.prepare = function(sounds)
+    for _, s in ipairs(sounds) do
+        M.sfx.tracks[s.name] = sound.sampleplayer.new(s.path)
+        if s.volume ~= nil then
+            M.sfx.tracks[s.name]:setVolume(s.volume, s.volume)
+        end
+    end
+end
+
+M.sfx.play = function(name, rate)
+    if rate ~= nil then
+        M.sfx.tracks[name]:setRate(rate)
+    end
+    M.sfx.tracks[name]:play()
+end
+
 M.music = {}
 M.music.current = nil
 M.music.tracks = {}
@@ -229,6 +296,8 @@ M.music.play = function(next, from_volume)
         M.music.current:setVolume(from_volume or 0)
         M.music.current:play(0)
         M.music.current:setVolume(1, 1, 1.0)
+    else
+        print("Couldn't find song", next)
     end
 end
 

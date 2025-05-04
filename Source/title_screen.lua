@@ -4,6 +4,7 @@ local g <const> = playdate.graphics
 local fsm <const> = cauldron.fsm
 local twn <const> = cauldron.tween
 local mus <const> = cauldron.music
+local sfx <const> = cauldron.sfx
 
 local rad = math.rad
 local game = fsm.get("game")
@@ -17,7 +18,6 @@ gfx.load_image("title_seal", 'images/secret_seal.png')
 gfx.load_image("title_glow", 'images/logo_glow.png')
 
 game:add_on_enter_hook("menu", function()
-    mus:play("intro")
     vars.title_done = false
     vars.title_crank = 0
     vars.title_glow = 0
@@ -35,8 +35,8 @@ game:add_on_update_hook("menu", function()
         if vars.title_crank >= 360 then
             vars.title_crank = 360
             vars.title_done = true
---            music:play_start_game_sound()
-            mus:fade_to("fight")
+            sfx.play("start")
+            mus.fade_to("fight")
             vars.title_fadeout = { value = 0 }
             tweens.title_fadeout = twn.new(5, vars.title_fadeout, { value = 1 }, 'outCubic')
         end
@@ -58,35 +58,34 @@ game:add_on_draw_hook("menu", function()
     local logo_glow = gfx.get_image("title_glow")
     local font = gfx.get_font("small")
 
-    gfx.clearBlack()
-    g.setColor(g.kColorWhite)
-    g.setImageDrawMode(g.kDrawModeCopy)
-    logo:drawFaded(0, 0, vars.title_fade.value, g.image.kDitherTypeBayer4x4)
-    logo_glow:draw(vars.title_glow - 20, -1, g.kImageUnflipped, playdate.geometry.rect.new(vars.title_glow - 20, 0, 50, 100))
-    logo_glow:draw(vars.title_glow, -1, g.kImageUnflipped, playdate.geometry.rect.new(vars.title_glow, 0, 20, 240))
-    g.setImageDrawMode(g.kDrawModeInverted)
+    gfx.clear_black()
+    gfx.copy_white()
+    gfx.draw_faded(0, 0, "title_logo", vars.title_fade.value)
+    gfx.draw_image(vars.title_glow - 20, -1, "title_glow", playdate.geometry.rect.new(vars.title_glow - 20, 0, 50, 100))
+    gfx.draw_image(vars.title_glow, -1, "title_glow", playdate.geometry.rect.new(vars.title_glow, 0, 20, 240))
+    
+    gfx.invert_white()
 
     if vars.title_crank > 0 then
-        g.drawArc(200, 170, 30, 0, vars.title_crank or 0)
+        gfx.draw_arc(200, 170, 30, 0, vars.title_crank or 0)
         local a = rad(vars.title_crank - 90)
         local x, y = 30 * math.cos(a), 30 * math.sin(a)
-        g.setColor(g.kColorBlack)
-        g.fillCircleAtPoint(200 + x, 170 + y, 8)
-        g.setColor(g.kColorWhite)
-        g.fillCircleAtPoint(200 + x, 170 + y, 5)
-        g.setColor(g.kColorWhite)
-        g.setImageDrawMode(playdate.graphics.kDrawModeCopy)
-        seal:drawFaded(200 - 30, 170 - 30, vars.title_crank / 360, g.image.kDitherTypeBayer2x2)
+        gfx.black()
+        gfx.draw_circle(200 + x, 170 + y, 8, true)
+        gfx.white()
+        gfx.draw_circle(200 + x, 170 + y, 5, true)
+        gfx.copy_white()
+        gfx.draw_faded(170, 140, "seal", vars.title_crank / 360, g.image.kDitherTypeBayer2x2)
     end
-    g.setColor(g.kColorBlack)
-    g.fillRect(0, 160, 400, 12)
-    g.setColor(g.kColorWhite)
-    g.setImageDrawMode(g.kDrawModeInverted)
+
+    gfx.copy_black()
+    gfx.draw_rect(0, 160, 400, 12, true)
+    gfx.invert_white()
     font:drawTextAligned("CRANK: Begin Ritual", 200, 160, kTextAlignment.center)
-    g.setImageDrawMode(g.kDrawModeCopy)
+    gfx.copy_white()
 
     if vars.title_done then
-        black:drawFaded(0, 0, vars.title_fadeout.value, g.image.kDitherTypeBayer2x2)
+        gfx.draw_faded(0, 0, "black", vars.title_fadeout.value, g.image.kDitherTypeBayer2x2)
         if vars.title_fadeout.value == 1 then
             game:follow("menu->start")
         end

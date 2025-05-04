@@ -4,6 +4,7 @@ local gfx <const> = cauldron.graphics
 local fsm <const> = cauldron.fsm
 local cut <const> = cauldron.cutscene
 local mus <const> = cauldron.music
+local sfx <const> = cauldron.sfx
 local sav <const> = cauldron.save
 
 local game <const> = fsm.new("game")
@@ -27,7 +28,10 @@ end
 local function load_fonts()
 	gfx.load_font("small", "font//topaz_11")
 	gfx.load_font("big", "font//Mini Sans 2X")
-	gfx.load_image("boss", "images//boss.png")
+end
+
+local function load_images()
+	
 end
 
 local function load_cutscenes()
@@ -40,7 +44,16 @@ local function load_music()
 		{ name = "fight", path = "music//phase1.mp3" },
 		{ name = "boss", path = "music//phase2.mp3" }
 	})
-	printTable(mus.tracks)
+
+	sfx.prepare({
+		{ name = "start", path = "sfx//ack.wav" },
+		{ name = "laugh", path = "sfx//evil_laugh.wav" },
+		{ name = "collect", path = "sfx//blop.wav" },
+		{ name = "break", path = "sfx//orb_break.wav" },
+		{ name = "full", path = "sfx//orb_full.wav", volume = 0.5 },
+		{ name = "summon", path = "sfx//summon.wav", volume = 0.5 },
+		{ name = "scream", path = "sfx//crush.wav", volume = 0.4 },
+	})
 end
 
 local function load_game_fsm()
@@ -60,6 +73,7 @@ local function load_game_fsm()
 	game:add_state("credits")
 
 	game:add_on_enter_hook("game start", function()
+		mus.play("intro")
 		local saved_game_exists, _ = sav.load(default_save())
 
 		if saved_game_exists then
@@ -82,10 +96,11 @@ local function load_game_fsm()
 end
 
 function cauldron.load()
-	playdate.display.setRefreshRate(45)
+	playdate.display.setRefreshRate(30)
 	sav.init("witchbane_savefile", true)
 
 	load_fonts()
+	load_images()
 	load_music()
 	load_cutscenes()
 	load_game_fsm()
@@ -100,7 +115,6 @@ end
 
 function cauldron.draw()
 	game:draw()
-	gfx.draw_fps(0, 0)
 end
 
 cauldron.init()
