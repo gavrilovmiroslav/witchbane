@@ -31,7 +31,7 @@ local function load_fonts()
 end
 
 local function load_images()
-	
+	gfx.load_image("seal", "images//secret_seal.png")
 end
 
 local function load_cutscenes()
@@ -42,7 +42,8 @@ local function load_music()
 	mus.prepare({
 		{ name = "intro", path = "music//intro.mp3", rate = 0.7 },
 		{ name = "fight", path = "music//phase1.mp3" },
-		{ name = "boss", path = "music//phase2.mp3" }
+		{ name = "boss", path = "music//phase2.mp3" },
+		{ name = "sanctuary", path = "music//sanctuary.mp3" }
 	})
 
 	sfx.prepare({
@@ -62,6 +63,7 @@ local function load_game_fsm()
 	game:add_state("menu")
 	import "title_screen"
 	game:add_state("run start")
+	import "sanctuary_screen"
 	game:add_state("demon intro")
 	game:add_state("bullethell")
 	game:add_state("demon dialogue")
