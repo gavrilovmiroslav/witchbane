@@ -4,6 +4,7 @@ local lume <const> = import "utils/lume"
 local tween <const> = import "utils/tween"
 local panels = import "panels/Panels"
 local fsm = import "utils/fsm"
+local anim = import "utils/anim"
 
 local M = {}
 
@@ -194,6 +195,15 @@ M.graphics.draw_text_centered = function(x, y, text, colorChange)
     gfx.setColor(oldColor)
 end
 
+M.graphics.load_anim = function(name, path, speed, rep)
+    M.loaded.anims[name] = anim.new(M.graphics, name, path, speed, rep)
+    return M.loaded.anims[name]
+end
+
+M.graphics.get_anim = function(name)
+    return M.loaded.anims[name]
+end
+
 M.graphics.load_image = function(name, path)
     M.loaded.images[name] = gfx.image.new(path)
     return M.loaded.images[name]
@@ -219,6 +229,12 @@ M.graphics.draw_image = function(x, y, name, rect)
     if M.loaded.images[name] ~= nil then
         M.loaded.images[name]:draw(x, y, gfx.kImageUnflipped, rect)
     end
+end
+
+M.graphics.draw_anim = function(x, y, name, a)
+    local a = M.graphics.get_anim(name)
+    local image = M.graphics.get_image(a:get_current_frame())
+    image:drawAnchored(x, y, a.pivot[1], a.pivot[2])
 end
 
 M.graphics.draw_arc = function(x, y, a, b, i)
@@ -332,6 +348,9 @@ M.music.prepare = function(songs)
         if s.rate ~= nil then
             M.music.tracks[s.name]:setRate(s.rate)
         end
+        if s.volume ~= nil then
+            M.music.tracks[s.name]:setVolume(s.volume)
+        end
     end
 end
 
@@ -346,11 +365,11 @@ M.music.play = function(next, from_volume)
     end
 end
 
-M.music.fade_to = function(next)
+M.music.fade_to = function(next, volume)
     if M.music.current ~= nil then
         M.music.current:setVolume(0, 0, 1.0, function(p, e)
             M.music.current:stop()
-            M.music.current:setVolume(1)
+            M.music.current:setVolume(volume or 1)
             if next ~= nil then
                 M.music.play(next, 0)
             end

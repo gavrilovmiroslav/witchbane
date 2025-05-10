@@ -4,6 +4,7 @@ local g <const> = playdate.graphics
 local fsm <const> = cauldron.fsm
 local twn <const> = cauldron.tween
 local sfx <const> = cauldron.sfx
+local mus <const> = cauldron.mus
 
 local rad = math.rad
 local game = fsm.get("game")
@@ -34,8 +35,9 @@ game:add_on_update_hook("menu", function()
             title_crank = 360
             title_done = true
             sfx.play("start")
+            mus.fade_to("sanctuary", 0.5)
             twn.new("title_fadeout", 5, { 0, 1 }, 'outCubic', function()
-                game:follow("menu->run start")
+                game:follow("menu->bullethell")
             end)
         end
         if c == 0 and a == 0 and playdate.getCrankPosition() > 0 then

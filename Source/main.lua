@@ -8,6 +8,7 @@ local sfx <const> = cauldron.sfx
 local sav <const> = cauldron.save
 
 local game <const> = fsm.new("game")
+local input <const> = fsm.new("input contexts")
 
 local function default_save()
 	return {
@@ -32,6 +33,7 @@ end
 
 local function load_images()
 	gfx.load_image("seal", "images//secret_seal.png")
+	gfx.load_anim("flame", "images//", 3)
 end
 
 local function load_cutscenes()
@@ -43,7 +45,7 @@ local function load_music()
 		{ name = "intro", path = "music//intro.mp3", rate = 0.7 },
 		{ name = "fight", path = "music//phase1.mp3" },
 		{ name = "boss", path = "music//phase2.mp3" },
-		{ name = "sanctuary", path = "music//sanctuary.mp3" }
+		{ name = "sanctuary", path = "music//sanctuary.mp3", volume = 0.5 }
 	})
 
 	sfx.prepare({
@@ -62,15 +64,8 @@ local function load_game_fsm()
 	game:add_state("intro")
 	game:add_state("menu")
 	import "title_screen"
-	game:add_state("run start")
-	import "sanctuary_screen"
-	game:add_state("demon intro")
 	game:add_state("bullethell")
-	game:add_state("demon dialogue")
-	game:add_state("demon shaming")
 	game:add_state("reward screen")
-	game:add_state("seal select")
-	game:add_state("item description")
 	game:add_state("win cue")
 	game:add_state("credits")
 
@@ -94,8 +89,22 @@ local function load_game_fsm()
 	game:add_link("game start", "menu", "game start->menu")
 	game:add_link("intro", "menu", "intro->menu")
 
-	game:add_link("menu", "run start", "menu->run start")
+	game:add_link("menu", "bullethell", "menu->bullethell")
 	game:init()
+end
+
+function load_input_fsm()
+	input:add_state("sanctuary")
+	input:add_state("player")
+	input:add_state("dialogue")
+
+	input:add_link("sanctuary", "player", "give player control")
+	input:add_link("player", "dialogue", "start dialogue")
+	input:add_link("dialogue", "player", "end dialogue")
+	input:add_link("player", "sanctuary", "take away control")
+	input:add_link("dialogue", "sanctuary", "take away control")
+
+	input:init()
 end
 
 function cauldron.load()
@@ -107,6 +116,7 @@ function cauldron.load()
 	load_music()
 	load_cutscenes()
 	load_game_fsm()
+	load_input_fsm()
 end
 
 function cauldron.debug(message)
