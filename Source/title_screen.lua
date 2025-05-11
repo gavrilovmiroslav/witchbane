@@ -4,7 +4,7 @@ local g <const> = playdate.graphics
 local fsm <const> = cauldron.fsm
 local twn <const> = cauldron.tween
 local sfx <const> = cauldron.sfx
-local mus <const> = cauldron.mus
+local mus <const> = cauldron.music
 
 local rad = math.rad
 local game = fsm.get("game")

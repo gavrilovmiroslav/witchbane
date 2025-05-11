@@ -3,16 +3,42 @@ import "CoreLibs/object"
 local lume <const> = import "utils/lume"
 local tween <const> = import "utils/tween"
 local panels = import "panels/Panels"
-local fsm = import "utils/fsm"
+local fsm = import "utils/fsm" 
 local anim = import "utils/anim"
+local ecs = import "utils/ecs"
 
 local M = {}
+
+-- GENERAL
+
+M.load = function() end
+M.draw = function() end
+M.update = function() end
+
+function playdate.update()
+    if M.cutscene.state ~= nil then
+        Panels.update()
+    else
+        M.update()
+        M.draw()
+    end
+    if M.fps then
+        playdate.drawFPS(0, 0)
+    end
+end
+
+M.init = function()
+    M.load()
+end
+
+-- GRAPHICS 
 
 local gfx = playdate.graphics
 
 M.fps = true
 M.loaded = {}
 M.loaded.images = {}
+M.loaded.anims = {}
 M.loaded.fonts = {}
 M.loaded.ui = {}
 M.loaded.fsms = {}
@@ -196,7 +222,7 @@ M.graphics.draw_text_centered = function(x, y, text, colorChange)
 end
 
 M.graphics.load_anim = function(name, path, speed, rep)
-    M.loaded.anims[name] = anim.new(M.graphics, name, path, speed, rep)
+    M.loaded.anims[name] = anim:new(M.graphics, name, path, speed, rep)
     return M.loaded.anims[name]
 end
 
@@ -315,6 +341,10 @@ M.tween.get = function(name)
     return t.value
 end
 
+-- ECS
+
+M.ecs = ecs:new()
+
 -- AUDIO
 
 local sound <const> = playdate.sound
@@ -375,28 +405,6 @@ M.music.fade_to = function(next, volume)
             end
         end)
     end
-end
-
--- GENERAL
-
-M.load = function() end
-M.draw = function() end
-M.update = function() end
-
-function playdate.update()
-    if M.cutscene.state ~= nil then
-        Panels.update()
-    else
-        M.update()
-        M.draw()
-    end
-    if M.fps then
-        playdate.drawFPS(0, 0)
-    end
-end
-
-M.init = function()
-    M.load()
 end
 
 return M

@@ -1,0 +1,29 @@
+{
+    "title": "Introduction",
+    "panels": [
+        {
+            "layers": [
+                { "image": "..//images//demons//gamori4.png", "x": 0, "y": 0 },
+                { "text": "Young maiden, Mother's praise...", "x": 10, "y": 210, "invertTextColor": true }
+            ]
+        },
+        {
+            "layers": [
+                { "image": "..//images//demons//gamori3.png", "x": 0, "y": 0 },
+                { "text": "wake to hear what we propose.", "x": 10, "y": 210, "invertTextColor": true }
+            ]
+        },
+        {
+            "layers": [
+                { "image": "..//images//demons//gamori2.png", "x": 0, "y": 0 },
+                { "text": "Wake to salvation. Wake to betrayal.", "x": 10, "y": 210, "invertTextColor": true }
+            ]
+        },
+        {
+            "layers": [
+                { "image": "..//images//demons//gamori1.png", "x": 0, "y": 0 },
+                { "text": "Wake to defeat the...", "x": 10, "y": 210, "invertTextColor": true }
+            ]
+        }
+    ]
+}

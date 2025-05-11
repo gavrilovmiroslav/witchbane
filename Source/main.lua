@@ -65,6 +65,7 @@ local function load_game_fsm()
 	game:add_state("menu")
 	import "title_screen"
 	game:add_state("bullethell")
+	import "bullethell_screen"
 	game:add_state("reward screen")
 	game:add_state("win cue")
 	game:add_state("credits")
